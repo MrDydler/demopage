@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <h1>Наши товары</h1>
+    
+    <div class="products-container">
+        {% for product in products %}
+        <div class="product">
+            <h2>{{ product.name }}</h2>
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            <button class="buy-btn button-arounder">Купить</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="registration-form">
+        <h2>Для заказа товара с Вами свяжется сотрудник по доставке</h2>
+        <!-- форма регистрации -->
+        <form method="post">
+            {% csrf_token %}
+            <!-- form fields -->
+        </form>
+    </div>
+
+    {% if success %}
+        <p>Заявка на звонок была принята!</p>
+    {% endif %}
+
+    <script>
+        // JavaScript code
+    </script>
+{% endblock %}
