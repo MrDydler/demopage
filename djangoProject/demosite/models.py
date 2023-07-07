@@ -1,17 +1,12 @@
 from django.db import models
 
-# Create your models here.
 class Buyer(models.Model):
     name = models.CharField(max_length=25, blank=False)
-    phone = models.IntegerField()
+    phone = models.CharField(max_length=20)
     email = models.CharField(max_length=25, blank=False)
+    buyer_message = models.TextField(blank=True, max_length=255)
+    selected_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)
     
-    
-class Test(models.Model):
-    name = models.CharField(max_length=35)
-    second_name = models.CharField(max_length=55)
-    
-
 
 class RegistrationForm(models.Model):
     name = models.CharField(max_length=255)
@@ -19,23 +14,34 @@ class RegistrationForm(models.Model):
     email = models.EmailField()
     message = models.TextField()
 
+    class Meta:
+        unique_together = ('email',)
 
 class Product(models.Model):
     MATERIAL_CHOICES = [
-    ("1", "золотой"),
-    ("2", "Серебряный"),
+        ("1", "золотой"),
+        ("2", "Серебряный"),
+        ("3", "Жемчуг"),
+        ("4", "Платина"),
+        ("5", "Алмаз"),
+        ("6", "Медь")
     ]
     name = models.CharField(max_length=255, blank=True)
     id = models.IntegerField(primary_key=True)
     price = models.FloatField()
     description = models.TextField(max_length=700)
-    material = models.CharField(max_length=1,choices=MATERIAL_CHOICES,blank=True)
+    material = models.CharField(max_length=1, choices=MATERIAL_CHOICES, blank=True)
     image = models.ImageField(upload_to='media/products/')
-    
 
-    
-    
-    
+
+
+class Stock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.name
+        return f"{self.product.name} - {self.quantity} in stock"
+
+
+    # def __str__(self):
+    #     return self.name
